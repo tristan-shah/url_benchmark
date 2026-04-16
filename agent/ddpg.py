@@ -138,8 +138,10 @@ class DDPGAgent:
                  init_critic,
                  use_tb,
                  use_wandb,
+                 update_encoder=True,
                  meta_dim=0):
         self.reward_free = reward_free
+        self.update_encoder = update_encoder
         self.obs_type = obs_type
         self.obs_shape = obs_shape
         self.action_dim = action_shape[0]
