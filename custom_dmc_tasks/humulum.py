@@ -12,7 +12,7 @@ from dm_control.utils import containers
 from dm_control.utils import rewards
 from dm_control.utils import io as resources
 
-_DEFAULT_TIME_LIMIT = 20
+_DEFAULT_TIME_LIMIT = 10
 _STAND_HEIGHT = 1.2  # head height above ground considered standing
 
 SUITE = containers.TaggedTasks()
