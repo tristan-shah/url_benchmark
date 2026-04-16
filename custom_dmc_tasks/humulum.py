@@ -1,6 +1,7 @@
 """Humulum Domain — 2D humanoid standup from fixed initial state."""
 
 import collections
+import os
 
 import numpy as np
 from dm_control import mujoco
