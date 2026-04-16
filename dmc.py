@@ -313,5 +313,6 @@ def make(name, obs_type, frame_stack, action_repeat, seed):
         env = ObservationDTypeWrapper(env, np.float32)
 
     env = action_scale.Wrapper(env, minimum=-1.0, maximum=+1.0)
+    env = ActionDTypeWrapper(env, np.float32)
     env = ExtendedTimeStepWrapper(env)
     return env

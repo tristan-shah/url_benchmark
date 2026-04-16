@@ -4,8 +4,12 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 import os
 
-os.environ['MKL_SERVICE_FORCE_INTEL'] = '1'
-os.environ['MUJOCO_GL'] = 'egl'
+import platform
+if platform.system() != 'Darwin':
+    os.environ['MKL_SERVICE_FORCE_INTEL'] = '1'
+    os.environ['MUJOCO_GL'] = 'egl'
+else:
+    os.environ['MUJOCO_GL'] = 'glfw'
 
 from pathlib import Path
 

@@ -47,7 +47,8 @@ class ReplayBufferStorage:
             self._current_episode[key].append(value)
         for spec in self._data_specs:
             value = time_step[spec.name]
-            if np.isscalar(value):
+            if np.isscalar(value) or (isinstance(value, np.ndarray)
+                                      and value.ndim == 0):
                 value = np.full(spec.shape, value, spec.dtype)
             assert spec.shape == value.shape and spec.dtype == value.dtype
             self._current_episode[spec.name].append(value)

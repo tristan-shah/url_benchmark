@@ -1,0 +1,35 @@
+name: urlb
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - absl-py
+  - scikit-image
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pytorch::torchaudio
+  - nvidia::cuda-toolkit=12.1
+  - pip:
+    - termcolor
+    - mujoco==3.7.0
+    - dm-control==1.0.39
+    - dm-env
+    - imageio
+    - imageio-ffmpeg
+    - hydra-core==1.1.0
+    - hydra-submitit-launcher==1.1.5
+    - pandas
+    - ipdb
+    - yapf
+    - scikit-learn
+    - matplotlib
+    - opencv-python
+    - wandb
+    - moviepy
+    - tensorboard
+    - pyparsing
