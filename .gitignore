@@ -1,3 +1,4 @@
+*.pyc
 exp_local
 models
 *.err
