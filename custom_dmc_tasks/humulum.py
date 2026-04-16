@@ -1,7 +1,6 @@
 """Humulum Domain — 2D humanoid standup from fixed initial state."""
 
 import collections
-import os
 
 import numpy as np
 from dm_control import mujoco
@@ -17,15 +16,15 @@ _STAND_HEIGHT = 1.2  # head height above ground considered standing
 
 SUITE = containers.TaggedTasks()
 
-_INIT_STATE = None
-
-
-def _get_init_state():
-    global _INIT_STATE
-    if _INIT_STATE is None:
-        npy_path = os.path.join(os.path.dirname(__file__), 'humulum_init.npy')
-        _INIT_STATE = np.load(npy_path)
-    return _INIT_STATE
+_INIT_STATE = np.array([
+    -5.69669133e-03, -1.40173909e+00,  3.15282207e+00, -3.09313693e+00,
+    -2.32511620e-01, -3.11384200e+00, -1.17470462e-01, -3.13217174e+00,
+     6.28050424e+00, -3.14893727e+00, -3.13217174e+00,  6.28050424e+00,
+    -3.14893727e+00,  6.99103214e-02, -6.08517271e-04, -1.43865156e-01,
+    -2.64162545e-02,  6.20225465e-02, -1.94878478e-02,  3.07025207e-02,
+    -1.04211144e-01,  9.53556737e-03,  9.83598035e-02, -1.04211144e-01,
+     9.53556737e-03,  9.83598035e-02,
+])
 
 
 def make(task,
@@ -75,7 +74,7 @@ class Humulum(base.Task):
     """2D humanoid standup from a fixed initial state."""
 
     def initialize_episode(self, physics):
-        init = _get_init_state()
+        init = _INIT_STATE
         nq = physics.model.nq
         physics.data.qpos[:] = init[:nq]
         physics.data.qvel[:] = init[nq:]
