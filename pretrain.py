@@ -236,16 +236,24 @@ class Workspace:
         with snapshot.open('wb') as f:
             torch.save(payload, f)
 
+    def load_snapshot(self, snapshot_path):
+        snapshot_path = Path(snapshot_path)
+        print(f'loading snapshot: {snapshot_path}')
+        payload = torch.load(snapshot_path, map_location=self.cfg.device)
+        self.agent = payload['agent']
+        self._global_step = payload['_global_step']
+        self._global_episode = payload['_global_episode']
+        print(f'resumed from step {self._global_step} / episode {self._global_episode}')
+
 
 @hydra.main(config_path='.', config_name='pretrain')
 def main(cfg):
     from pretrain import Workspace as W
     root_dir = Path.cwd()
     workspace = W(cfg)
-    snapshot = root_dir / 'snapshot.pt'
-    if snapshot.exists():
-        print(f'resuming: {snapshot}')
-        workspace.load_snapshot()
+    resume = getattr(cfg, 'resume_snapshot', None)
+    if resume:
+        workspace.load_snapshot(resume)
     workspace.train()
 
 
