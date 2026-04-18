@@ -1,7 +1,7 @@
 """Plot head height for 8 random seeds of the best skill (stochastic policy)."""
 
 '''
-python plot_best_skill_seeds.py models/states/humulum/diayn/1/snapshot_10800.pt
+python plot_best_skill_seeds.py models/states/humulum/diayn/1/snapshot_2000010.pt --num-seeds 10
 '''
 
 import argparse

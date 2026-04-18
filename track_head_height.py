@@ -1,7 +1,7 @@
 """Track head height over an episode for each DIAYN skill."""
 
 '''
-python track_head_height.py models/states/humulum/diayn/1/snapshot_10800.pt
+python track_head_height.py models/states/humulum/diayn/1/snapshot_2000010.pt
 '''
 
 import argparse
