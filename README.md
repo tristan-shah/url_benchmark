@@ -1,3 +1,8 @@
+# Commands for training custom environments
+
+python pretrain.py domain=triple_pendulum agent=diayn obs_type=states seed=1 num_seed_frames=8000
+
+
 # The Unsupervised Reinforcement Learning Benchmark (URLB)
 
 URLB provides a set of leading algorithms for unsupervised reinforcement learning where agents first pre-train without access to extrinsic rewards and then are finetuned to downstream tasks.
