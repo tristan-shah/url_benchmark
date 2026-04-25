@@ -2,6 +2,19 @@
 
 python pretrain.py domain=triple_pendulum agent=diayn obs_type=states seed=1 num_seed_frames=8000
 
+# For evaluating
+
+## humulum — domain auto-inferred from path
+python eval_extremity_height.py models/states/humulum/diayn/1/snapshot_2000010.pt
+
+## triple pendulum
+python eval_extremity_height.py models/states/triple_pendulum/diayn/1/snapshot_2000010.pt
+
+## compare two models side-by-side
+python eval_extremity_height.py models/states/humulum/diayn/1/snapshot_2000010.pt \
+                                models/states/humulum/smm/1/snapshot_2000010.pt
+
+
 
 # The Unsupervised Reinforcement Learning Benchmark (URLB)
 

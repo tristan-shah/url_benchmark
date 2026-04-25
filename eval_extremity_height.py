@@ -54,6 +54,12 @@ REGISTRY = {
         ),
         'ref_height': None,
     },
+    'double_pendulum': {
+        'task': 'double_pendulum_swingup',
+        # bob2 geom centre is the tip of the chain
+        'height_fn': lambda env: float(env.physics.named.data.geom_xpos['bob2', 'z']),
+        'ref_height': None,
+    },
 }
 
 

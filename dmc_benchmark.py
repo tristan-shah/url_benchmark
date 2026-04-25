@@ -4,6 +4,7 @@ DOMAINS = [
     'jaco',
     'humulum',
     'triple_pendulum',
+    'double_pendulum',
 ]
 
 WALKER_TASKS = [
@@ -35,7 +36,11 @@ TRIPLE_PENDULUM_TASKS = [
     'triple_pendulum_swingup',
 ]
 
-TASKS = WALKER_TASKS + QUADRUPED_TASKS + JACO_TASKS + HUMULUM_TASKS + TRIPLE_PENDULUM_TASKS
+DOUBLE_PENDULUM_TASKS = [
+    'double_pendulum_swingup',
+]
+
+TASKS = WALKER_TASKS + QUADRUPED_TASKS + JACO_TASKS + HUMULUM_TASKS + TRIPLE_PENDULUM_TASKS + DOUBLE_PENDULUM_TASKS
 
 PRIMAL_TASKS = {
     'walker': 'walker_stand',
@@ -43,4 +48,5 @@ PRIMAL_TASKS = {
     'quadruped': 'quadruped_walk',
     'humulum': 'humulum_standup',
     'triple_pendulum': 'triple_pendulum_swingup',
+    'double_pendulum': 'double_pendulum_swingup',
 }

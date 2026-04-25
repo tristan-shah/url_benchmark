@@ -5,6 +5,7 @@ from custom_dmc_tasks import quadruped
 from custom_dmc_tasks import jaco
 from custom_dmc_tasks import humulum
 from custom_dmc_tasks import triple_pendulum
+from custom_dmc_tasks import double_pendulum
 
 
 def make(domain, task,
@@ -39,6 +40,11 @@ def make(domain, task,
                             visualize_reward=visualize_reward)
     elif domain == 'triple_pendulum':
         return triple_pendulum.make(task,
+                                    task_kwargs=task_kwargs,
+                                    environment_kwargs=environment_kwargs,
+                                    visualize_reward=visualize_reward)
+    elif domain == 'double_pendulum':
+        return double_pendulum.make(task,
                                     task_kwargs=task_kwargs,
                                     environment_kwargs=environment_kwargs,
                                     visualize_reward=visualize_reward)
