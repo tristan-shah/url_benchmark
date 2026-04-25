@@ -17,6 +17,8 @@
 
         <geom name="floor" pos="0 0 0" size="0 0 0.05" type="plane" material="groundplane"/>
 
+        <camera name="fixed" pos="0 -6 2.2" xyaxes="1 0 0 0 0 1"/>
+
         <!-- First link -->
         <body name="first_link" pos="0 0 2.2">
             <!-- <joint name="hinge1" type="hinge" axis="0 1 0" pos="0 0 0" damping="0.1"/> -->
