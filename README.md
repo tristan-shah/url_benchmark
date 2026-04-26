@@ -14,6 +14,9 @@ python eval_extremity_height.py models/states/triple_pendulum/diayn/1/snapshot_2
 python eval_extremity_height.py models/states/humulum/diayn/1/snapshot_2000010.pt \
                                 models/states/humulum/smm/1/snapshot_2000010.pt
 
+python eval_extremity_height.py models/states/double_pendulum/diayn/1/snapshot_2000010.pt \
+                                models/states/double_pendulum/smm/1/snapshot_2000010.pt
+
 
 
 # The Unsupervised Reinforcement Learning Benchmark (URLB)

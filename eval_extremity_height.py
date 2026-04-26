@@ -56,8 +56,20 @@ REGISTRY = {
     },
     'double_pendulum': {
         'task': 'double_pendulum_swingup',
-        # bob2 geom centre is the tip of the chain
-        'height_fn': lambda env: float(env.physics.named.data.geom_xpos['bob2', 'z']),
+        # tip of second_link: body-origin z + R @ [0,0,-1] z-component
+        'height_fn': lambda env: float(
+            env.physics.named.data.xpos['second_link', 'z'] -
+            env.physics.named.data.xmat['second_link', 'zz']
+        ),
+        'ref_height': None,
+    },
+    'cart_pole': {
+        'task': 'cart_pole_swingup',
+        # tip of pole geom: body-origin z + R @ [0,0,-1] z-component
+        'height_fn': lambda env: float(
+            env.physics.named.data.xpos['pole', 'z'] -
+            env.physics.named.data.xmat['pole', 'zz']
+        ),
         'ref_height': None,
     },
 }
@@ -228,7 +240,7 @@ def main():
         # Save (n_seeds, T) array — matches external plotting framework format
         stem = args.out.stem
         safe_label = label.replace('/', '_')
-        npy_out = args.out.parent / f'{stem}_{safe_label}.npy'
+        npy_out = args.out.parent / f'{stem}_{domain}_{safe_label}.npy'
         np.save(npy_out, arr)
         print(f'  Saved trajectories {arr.shape} -> {npy_out}')
 

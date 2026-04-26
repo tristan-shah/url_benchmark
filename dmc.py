@@ -302,7 +302,7 @@ def _make_dmc(obs_type, domain, task, frame_stack, action_repeat, seed):
 def make(name, obs_type, frame_stack, action_repeat, seed):
     assert obs_type in ['states', 'pixels']
     domain, task = name.split('_', 1)
-    domain = dict(cup='ball_in_cup', triple='triple_pendulum', double='double_pendulum').get(domain, domain)
+    domain = dict(cup='ball_in_cup', triple='triple_pendulum', double='double_pendulum', cart='cart_pole').get(domain, domain)
 
     make_fn = _make_jaco if domain == 'jaco' else _make_dmc
     env = make_fn(obs_type, domain, task, frame_stack, action_repeat, seed)
