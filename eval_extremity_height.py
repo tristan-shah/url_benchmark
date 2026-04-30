@@ -79,6 +79,10 @@ REGISTRY = {
 # Agent helpers (agent-type-agnostic)
 # ---------------------------------------------------------------------------
 
+def is_skill_agent(agent) -> bool:
+    return hasattr(agent, 'skill_dim') or hasattr(agent, 'z_dim')
+
+
 def num_skills(agent) -> int:
     if hasattr(agent, 'skill_dim'):
         return agent.skill_dim
@@ -111,12 +115,13 @@ def domain_from_path(snapshot: Path) -> str:
 # Episode runner
 # ---------------------------------------------------------------------------
 
-def run_episode(env, agent, skill_idx: int, height_fn, seed: int,
-                stochastic: bool = True) -> np.ndarray:
+def run_episode(env, agent, height_fn, seed: int,
+                meta: dict = None) -> np.ndarray:
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    meta = make_meta(agent, skill_idx)
+    if meta is None:
+        meta = agent.init_meta()
     time_step = env.reset()
     heights = []
 
@@ -125,8 +130,8 @@ def run_episode(env, agent, skill_idx: int, height_fn, seed: int,
         with torch.no_grad(), utils.eval_mode(agent):
             action = agent.act(
                 time_step.observation, meta,
-                step=agent.num_expl_steps + 1 if stochastic else 0,
-                eval_mode=not stochastic,
+                step=agent.num_expl_steps + 1,
+                eval_mode=False,
             )
         time_step = env.step(action)
 
@@ -140,7 +145,8 @@ def run_episode(env, agent, skill_idx: int, height_fn, seed: int,
 def find_best_skill(agent, env, height_fn, selection_seeds: int) -> int:
     best_idx, best_mean = 0, -np.inf
     for idx in range(num_skills(agent)):
-        means = [run_episode(env, agent, idx, height_fn, seed=s).mean()
+        meta = make_meta(agent, idx)
+        means = [run_episode(env, agent, height_fn, seed=s, meta=meta).mean()
                  for s in range(selection_seeds)]
         mean = float(np.mean(means))
         print(f'    skill {idx:>3}: mean height = {mean:.4f} m')
@@ -155,24 +161,32 @@ def evaluate_snapshot(snapshot: Path, height_fn, num_seeds: int,
     agent = payload['agent']
     agent.device = torch.device(device)
 
-    print(f'  Finding best skill ({selection_seeds} seeds per skill) ...')
-    best_idx = find_best_skill(agent, env, height_fn, selection_seeds)
-    print(f'  Best skill: {best_idx}')
+    if is_skill_agent(agent):
+        print(f'  Finding best skill ({selection_seeds} seeds per skill) ...')
+        best_idx = find_best_skill(agent, env, height_fn, selection_seeds)
+        print(f'  Best skill: {best_idx}')
+        meta = make_meta(agent, best_idx)
+        skill_label = f'skill {best_idx}'
+        seed_offset = selection_seeds
+    else:
+        print(f'  No skills (non-skill agent) — running {num_seeds} seeds directly.')
+        best_idx = None
+        meta = agent.init_meta()
+        skill_label = 'no skill'
+        seed_offset = 0
 
-    print(f'  Running {num_seeds} evaluation seeds for skill {best_idx} ...')
+    print(f'  Running {num_seeds} evaluation seeds ({skill_label}) ...')
     trajs = []
     for i in range(num_seeds):
-        seed = selection_seeds + i
-        h = run_episode(env, agent, best_idx, height_fn, seed=seed)
+        h = run_episode(env, agent, height_fn, seed=seed_offset + i, meta=meta)
         trajs.append(h)
-        print(f'    seed {seed}: {len(h)} steps, mean = {h.mean():.4f} m')
+        print(f'    seed {seed_offset + i}: {len(h)} steps, mean = {h.mean():.4f} m')
 
-    # Pad to same length (last value repeated) in case episodes differ slightly
     max_len = max(len(t) for t in trajs)
     arr = np.array([np.pad(t, (0, max_len - len(t)), constant_values=t[-1])
                     for t in trajs], dtype=np.float32)  # (n_seeds, T)
 
-    return best_idx, arr
+    return best_idx, skill_label, arr
 
 
 # ---------------------------------------------------------------------------
@@ -217,7 +231,7 @@ def main():
         color = colors[i % len(colors)]
         print(f'\nEvaluating {label} ...')
 
-        best_idx, arr = evaluate_snapshot(
+        best_idx, skill_label, arr = evaluate_snapshot(
             snapshot, height_fn, args.num_seeds, args.selection_seeds,
             args.device, env,
         )
@@ -230,7 +244,7 @@ def main():
         for j in range(arr.shape[0]):
             ax_best.plot(steps, arr[j], color=color, alpha=0.2, linewidth=0.7)
         ax_best.plot(steps, mean_h, color=color, linewidth=2,
-                     label=f'{label} — skill {best_idx} (mean={mean_h.mean():.4f} m)')
+                     label=f'{label} — {skill_label} (mean={mean_h.mean():.4f} m)')
 
         # Mean ± std panel
         ax_mean.plot(steps, mean_h, color=color, label=label)
