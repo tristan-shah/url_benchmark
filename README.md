@@ -1,6 +1,6 @@
 # Commands for training custom environments
 
-python pretrain.py domain=triple_pendulum agent=diayn obs_type=states seed=1 num_seed_frames=8000
+python pretrain.py domain=triple_pendulum agent=diayn obs_type=states seed=1
 
 # For evaluating
 
